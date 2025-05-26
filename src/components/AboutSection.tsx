@@ -129,7 +129,7 @@ const AboutSection = () => {
         <div className="horizontal-section w-screen h-full bg-black"></div>
 
         {/* Section 2: Me transition */}
-        <div className="horizontal-section w-screen h-full bg-gradient-to-r from-black to-white"></div>
+        <div className="horizontal-section w-screen h-full bg-white"></div>
 
         {/* Section 3: Who am I content */}
         <div 

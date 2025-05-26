@@ -28,30 +28,37 @@ const HeroSection = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Initial setup - hide elements
-      gsap.set([introTextRef.current, nameRef.current, characterRef.current, scrollIndicatorRef.current], {
+      // Set intro text words to start from left
+      const introWords = introTextRef.current?.querySelectorAll('.intro-word');
+      if (introWords) {
+        gsap.set(introWords, {
+          opacity: 0,
+          x: -50
+        });
+      }
+
+      // Initial setup - hide other elements
+      gsap.set([nameRef.current, characterRef.current, scrollIndicatorRef.current], {
         opacity: 0,
         y: 50
-      });
-
-      // Set intro text to start from left
-      gsap.set(introTextRef.current, {
-        opacity: 0,
-        x: -100
       });
 
       // Create timeline for entrance animations
       const tl = gsap.timeline({ delay: 0.5 });
 
-      // Animate intro text from left with fade
-      tl.to(introTextRef.current, {
-        opacity: 1,
-        x: 0,
-        duration: 1.2,
-        ease: "power2.out"
-      })
+      // Animate intro text words from left with stagger
+      if (introWords) {
+        tl.to(introWords, {
+          opacity: 1,
+          x: 0,
+          duration: 0.6,
+          ease: "power2.out",
+          stagger: 0.15
+        });
+      }
+      
       // Animate name with stagger effect
-      .to(nameRef.current, {
+      tl.to(nameRef.current, {
         opacity: 1,
         y: 0,
         duration: 1.2,
@@ -137,10 +144,32 @@ const HeroSection = () => {
         <a 
           href="#contact" 
           className="text-lg text-gray-600 hover:text-black transition-colors duration-300 font-medium"
-          style={{ fontFamily: 'CustomFont, Yoon350, Times New Roman MT Condensed, Times, serif' }}
+          style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
         >
           résumé
         </a>
+      </div>
+
+      {/* Scroll to Top Button */}
+      <div className="fixed bottom-8 right-8 z-50">
+        <button 
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="w-12 h-12 bg-black hover:bg-gray-800 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg"
+          aria-label="Scroll to top"
+        >
+          <svg 
+            width="20" 
+            height="20" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+          >
+            <path d="M18 15l-6-6-6 6"/>
+          </svg>
+        </button>
       </div>
 
       {/* Main content */}
@@ -150,7 +179,10 @@ const HeroSection = () => {
           className="text-5xl md:text-6xl lg:text-7xl text-gray-600 mb-12 font-light tracking-wide text-center w-full"
           style={{ fontFamily: 'Times New Roman MT Condensed, Times, serif', marginTop: '-558px' }}
         >
-          Hi! My name is
+          <span className="intro-word">Hi!</span>{' '}
+          <span className="intro-word">My</span>{' '}
+          <span className="intro-word">name</span>{' '}
+          <span className="intro-word">is</span>
         </p>
         
         <h1 

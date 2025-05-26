@@ -2,12 +2,14 @@
 import React, { useEffect } from 'react';
 import Navigation from '../components/Navigation';
 import HeroSection from '../components/HeroSection';
+import IntroSection from '../components/IntroSection';
 import AboutSection from '../components/AboutSection';
 import SkillsSection from '../components/SkillsSection';
 import ProjectsSection from '../components/ProjectsSection';
 import ProcessSection from '../components/ProcessSection';
 import CloneCodingSection from '../components/CloneCodingSection';
 import ContactSection from '../components/ContactSection';
+import HandwritingAnimation from '../components/HandwritingAnimation';
 
 const Index = () => {
   useEffect(() => {
@@ -38,9 +40,11 @@ const Index = () => {
 
   return (
     <div className="relative">
+      <HandwritingAnimation />
       <Navigation />
       <main>
         <HeroSection />
+        <IntroSection />
         <AboutSection />
         <SkillsSection />
         <ProjectsSection />
