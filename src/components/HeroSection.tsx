@@ -1,104 +1,245 @@
-
 import React, { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import injooCharacterImg from '/injooCharacter.png';
+
+gsap.registerPlugin(ScrollTrigger);
+
+// Google Fonts 로드
+const loadGoogleFonts = () => {
+  const link = document.createElement('link');
+  link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap';
+  link.rel = 'stylesheet';
+  document.head.appendChild(link);
+};
+
+// 컴포넌트 로드 시 폰트 로드
+if (typeof window !== 'undefined') {
+  loadGoogleFonts();
+}
 
 const HeroSection = () => {
+  const heroRef = useRef<HTMLElement>(null);
+  const introTextRef = useRef<HTMLParagraphElement>(null);
   const nameRef = useRef<HTMLHeadingElement>(null);
-  const introRef = useRef<HTMLParagraphElement>(null);
+  const characterRef = useRef<HTMLDivElement>(null);
+  const scrollIndicatorRef = useRef<HTMLDivElement>(null);
+  const handwritingRef = useRef<SVGPathElement>(null);
 
   useEffect(() => {
-    const splitText = (element: HTMLElement) => {
-      const text = element.textContent || '';
-      element.innerHTML = '';
-      
-      text.split('').forEach((char, index) => {
-        const span = document.createElement('span');
-        span.textContent = char === ' ' ? '\u00A0' : char;
-        span.style.display = 'inline-block';
-        span.style.opacity = '0';
-        span.style.transform = 'translateY(20px)';
-        span.style.transition = `all 0.6s ease ${index * 0.05}s`;
-        element.appendChild(span);
+    const ctx = gsap.context(() => {
+      // Initial setup - hide elements
+      gsap.set([introTextRef.current, nameRef.current, characterRef.current, scrollIndicatorRef.current], {
+        opacity: 0,
+        y: 50
       });
 
-      // Trigger animation
-      setTimeout(() => {
-        element.querySelectorAll('span').forEach((span) => {
-          span.style.opacity = '1';
-          span.style.transform = 'translateY(0)';
+      // Set intro text to start from left
+      gsap.set(introTextRef.current, {
+        opacity: 0,
+        x: -100
+      });
+
+      // Create timeline for entrance animations
+      const tl = gsap.timeline({ delay: 0.5 });
+
+      // Animate intro text from left with fade
+      tl.to(introTextRef.current, {
+        opacity: 1,
+        x: 0,
+        duration: 1.2,
+        ease: "power2.out"
+      })
+      // Animate name with stagger effect
+      .to(nameRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 1.2,
+        ease: "power2.out"
+      }, "-=0.3")
+      // Animate character
+      .to(characterRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "back.out(1.7)"
+      }, "-=0.6")
+      // Animate scroll indicator
+      .to(scrollIndicatorRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: "power2.out"
+      }, "-=0.3");
+
+      // Handwriting path animation on page load
+      if (handwritingRef.current) {
+        const path = handwritingRef.current;
+        const pathLength = path.getTotalLength();
+        
+        gsap.set(path, {
+          strokeDasharray: pathLength,
+          strokeDashoffset: pathLength
         });
-      }, 500);
-    };
 
-    if (nameRef.current) {
-      splitText(nameRef.current);
-    }
+        // Add handwriting drawing animation to timeline
+        tl.to(path, {
+          strokeDashoffset: 0,
+          duration: 2.5,
+          ease: "power2.out"
+        }, "-=0.8");
+      }
 
-    // Animate intro text
-    if (introRef.current) {
-      setTimeout(() => {
-        introRef.current!.style.opacity = '1';
-        introRef.current!.style.transform = 'translateY(0)';
-      }, 1200);
-    }
+      // Scroll indicator bounce
+      gsap.to(scrollIndicatorRef.current?.querySelector('.scroll-dot'), {
+        y: 8,
+        duration: 1.5,
+        ease: "power1.inOut",
+        yoyo: true,
+        repeat: -1
+      });
+
+      // Parallax effect on scroll (without character rotation)
+      ScrollTrigger.create({
+        trigger: heroRef.current,
+        start: "top top",
+        end: "bottom top",
+        scrub: 1,
+        onUpdate: (self) => {
+          const progress = self.progress;
+          gsap.to(nameRef.current, {
+            y: progress * -100,
+            opacity: 1 - progress * 0.5,
+            duration: 0.3
+          });
+          gsap.to(characterRef.current, {
+            y: progress * -150,
+            duration: 0.3
+          });
+        }
+      });
+
+    }, heroRef);
+
+    return () => ctx.revert();
   }, []);
 
   return (
-    <section id="home" className="relative min-h-screen bg-gray-100 flex items-center justify-center overflow-hidden">
-      <div className="text-center z-10">
+    <section 
+      ref={heroRef}
+      id="home" 
+      className="relative min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center overflow-hidden"
+    >
+
+
+      {/* Navigation hint */}
+      <div className="absolute top-8 right-8 z-10">
+        <a 
+          href="#contact" 
+          className="text-lg text-gray-600 hover:text-black transition-colors duration-300 font-medium"
+          style={{ fontFamily: 'CustomFont, Yoon350, Times New Roman MT Condensed, Times, serif' }}
+        >
+          résumé
+        </a>
+      </div>
+
+      {/* Main content */}
+      <div className="text-center z-10 max-w-6xl mx-auto px-8">
         <p 
-          ref={introRef}
-          className="text-lg md:text-xl text-gray-600 mb-8 opacity-0 transform translate-y-4 transition-all duration-700"
+          ref={introTextRef}
+          className="text-5xl md:text-6xl lg:text-7xl text-gray-600 mb-12 font-light tracking-wide text-center w-full"
+          style={{ fontFamily: 'Times New Roman MT Condensed, Times, serif', marginTop: '-558px' }}
         >
           Hi! My name is
         </p>
         
         <h1 
           ref={nameRef}
-          className="text-6xl md:text-8xl lg:text-9xl font-bold text-black mb-12"
+          className="text-6xl md:text-[8rem] lg:text-[11rem] xl:text-[14rem] font-black text-black mb-16 tracking-wide whitespace-nowrap"
+          style={{ fontFamily: 'CustomFont, Yoon350, Times New Roman MT Condensed, Times, serif', letterSpacing: '0.1em' }}
         >
-          Jyan Kim
+          InJoo Kim
         </h1>
 
-        {/* Character Illustration */}
-        <div className="flex justify-center mb-8">
+        {/* Character Image */}
+        <div ref={characterRef} className="absolute left-1/2 transform -translate-x-1/2 flex justify-center" style={{ top: 'calc(50% + 20px)' }}>
           <div className="relative">
-            <div className="w-32 h-32 md:w-40 md:h-40 bg-white rounded-full border-2 border-black flex items-center justify-center">
-              <svg 
-                width="80" 
-                height="80" 
-                viewBox="0 0 100 100" 
-                className="animate-pulse"
-              >
-                {/* Simple character illustration */}
-                <circle cx="50" cy="35" r="15" fill="#333" />
-                <circle cx="45" cy="32" r="2" fill="white" />
-                <circle cx="55" cy="32" r="2" fill="white" />
-                <path d="M45 40 Q50 45 55 40" stroke="#333" strokeWidth="2" fill="none" />
-                <rect x="40" y="50" width="20" height="30" rx="5" fill="#666" />
-                <rect x="35" y="55" width="30" height="15" rx="3" fill="#999" opacity="0.7" />
-                <circle cx="40" cy="85" r="5" fill="#333" />
-                <circle cx="60" cy="85" r="5" fill="#333" />
-              </svg>
-            </div>
+            <img 
+              src={`${import.meta.env.BASE_URL}injooCharacter.png`}
+              alt="InJoo Character" 
+              className="w-auto h-10 md:h-12 lg:h-16 object-contain relative z-10"
+              loading="eager"
+              decoding="async"
+              onError={(e) => {
+                console.error('Image failed to load:', e);
+                e.currentTarget.style.display = 'none';
+              }}
+              onLoad={() => console.log('Image loaded successfully')}
+              style={{ 
+                imageRendering: 'auto',
+                maxWidth: '100%',
+                height: '400px',
+                width: 'auto'
+              }}
+            />
+            
+            {/* Handwriting Circle Animation */}
+            <svg 
+              className="absolute inset-0 w-full h-full pointer-events-none"
+              viewBox="0 0 500 500"
+              style={{ transform: 'scale(3)' }}
+            >
+              <path
+                ref={handwritingRef}
+                d="M 350 50 Q 420 80, 460 150 Q 480 220, 460 290 Q 440 360, 380 400 Q 320 440, 250 430 Q 180 420, 120 380 Q 60 340, 40 270 Q 20 200, 40 130 Q 60 60, 130 40 Q 200 20, 270 40 Q 340 60, 380 30"
+                stroke="#333"
+                strokeWidth="2.5"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                style={{ 
+                  filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))',
+                  opacity: 0.7
+                }}
+              />
+            </svg>
           </div>
         </div>
-
-        <div className="absolute top-8 right-8">
-          <a 
-            href="#contact" 
-            className="text-sm text-gray-600 hover:text-black transition-colors duration-300"
-          >
-            résumé
-          </a>
-        </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-        <div className="w-6 h-10 border-2 border-black rounded-full flex justify-center">
-          <div className="w-1 h-3 bg-black rounded-full mt-2 animate-bounce"></div>
-        </div>
-      </div>
+
+
+      <style>{`
+        @font-face {
+          font-family: 'CustomFont';
+          src: url('/fonts/ffc278d3825e583bc658db3933a55996.ttf') format('truetype');
+          font-weight: normal;
+          font-style: normal;
+          font-display: swap;
+        }
+        
+        @font-face {
+          font-family: 'Yoon350';
+          src: url('/fonts/yoon350.ttf') format('truetype');
+          font-weight: normal;
+          font-style: normal;
+          font-display: swap;
+        }
+        
+        @font-face {
+          font-family: 'Times New Roman MT Condensed';
+          src: url('/fonts/Times New Roman MT Condensed Regular.otf') format('opentype');
+          font-weight: normal;
+          font-style: normal;
+          font-display: swap;
+        }
+        
+        .character-svg {
+          filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+      `}</style>
     </section>
   );
 };
