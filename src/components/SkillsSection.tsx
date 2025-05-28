@@ -110,34 +110,32 @@ const SkillsSection = () => {
     <section ref={sectionRef} id="skills" className="min-h-screen bg-white py-20 relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-32 right-20 w-64 h-64 bg-black rounded-full"></div>
-        <div className="absolute bottom-20 left-32 w-32 h-32 bg-black rounded-full"></div>
       </div>
 
       <div className="max-w-6xl mx-auto px-8 relative z-10">
         {/* Profile Section */}
         <div ref={profileRef} className="text-center mb-20">
-          <div className="w-40 h-40 mx-auto mb-8 bg-gradient-to-br from-gray-200 to-gray-400 rounded-full overflow-hidden shadow-2xl border-4 border-black">
+          <div className="w-64 h-96 mx-auto mb-8 bg-gradient-to-br from-gray-200 to-gray-400 overflow-hidden shadow-2xl rounded-tl-3xl">
             <div className="w-full h-full flex items-center justify-center">
-              <svg width="100" height="100" viewBox="0 0 100 100">
-                {/* Character silhouette */}
-                <circle cx="50" cy="35" r="18" fill="#333" />
-                <ellipse cx="50" cy="70" rx="20" ry="25" fill="#333" />
-                
-                {/* Hair */}
-                <path d="M32 25 Q35 15 50 20 Q65 15 68 25 Q65 10 50 15 Q35 10 32 25" fill="#000" />
-                
-                {/* Eyes */}
-                <circle cx="43" cy="32" r="2" fill="white" />
-                <circle cx="57" cy="32" r="2" fill="white" />
-                
-                {/* Smile */}
-                <path d="M43 40 Q50 45 57 40" stroke="white" strokeWidth="1.5" fill="none" strokeLinecap="round" />
-              </svg>
+              <img 
+                src={`${import.meta.env.BASE_URL}profile.jpg`}
+                alt="Profile" 
+                className="w-full h-full object-cover"
+                loading="eager"
+                decoding="async"
+                onError={(e) => {
+                  console.error('Profile image failed to load:', e);
+                  e.currentTarget.style.display = 'none';
+                }}
+                onLoad={() => console.log('profile.jpg loaded successfully')}
+              />
             </div>
           </div>
           
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 italic leading-tight">
+          <h2 
+            className="text-4xl md:text-5xl font-bold mb-6 italic leading-tight"
+            style={{ fontFamily: 'Times New Roman MT Condensed, Times, serif' }}
+          >
             "Ryan, the Lion-Hearted Person."
           </h2>
           
@@ -153,38 +151,78 @@ const SkillsSection = () => {
         </div>
 
         {/* Skills and Strengths */}
-        <div className="grid md:grid-cols-2 gap-20 items-start">
+        <div className="grid md:grid-cols-2 gap-20 items-start relative">
           {/* Skills */}
-          <div ref={skillsRef} className="space-y-8">
-            <h3 className="text-3xl font-bold border-b-4 border-black pb-3 inline-block">
-              Skills
-            </h3>
-            <div className="space-y-6">
+          <div ref={skillsRef} className="space-y-8 ml-[326px]">
+            <div className="relative inline-block">
+              <h3 
+                className="text-3xl font-bold pb-3"
+                style={{ fontFamily: 'Times New Roman MT Condensed, Times, serif' }}
+              >
+                Skills
+              </h3>
+              {/* SVG 밑줄 */}
+              <svg className="absolute bottom-0 left-0 w-full h-1" viewBox="0 0 100 4">
+                <rect x="0" y="0" width="100" height="4" fill="black"/>
+              </svg>
+            </div>
+            <div className="space-y-4">
               {skills.map((skill, index) => (
-                <div key={index} className="skill-item flex items-center space-x-4 opacity-0">
-                  <div className="w-3 h-3 bg-black rounded-full flex-shrink-0"></div>
-                  <span className="text-xl font-medium">{skill}</span>
-                  <div className="flex-1 h-px bg-gray-200"></div>
+                <div key={index} className="skill-item flex items-center space-x-3 opacity-0">
+                  <svg width="16" height="16" viewBox="0 0 16 16" className="text-black flex-shrink-0">
+                    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" fill="currentColor"/>
+                  </svg>
+                  <span 
+                    className="text-lg"
+                    style={{ fontFamily: 'Yoon350, sans-serif' }}
+                  >
+                    {skill}
+                  </span>
                 </div>
               ))}
             </div>
           </div>
 
+          {/* Vertical divider */}
+          <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-black transform -translate-x-1/2"></div>
+
           {/* Strengths */}
-          <div ref={strengthsRef} className="space-y-8">
-            <h3 className="text-3xl font-bold border-2 border-black rounded-full px-8 py-3 inline-block">
-              Strengths
-            </h3>
-            <div className="space-y-6">
+          <div ref={strengthsRef} className="space-y-8 mr-[-50px]">
+            <div className="relative inline-block">
+              <h3 
+                className="text-3xl font-bold px-8 py-3"
+                style={{ fontFamily: 'Times New Roman MT Condensed, Times, serif' }}
+              >
+                Strengths
+              </h3>
+              {/* SVG 동그라미 테두리 */}
+              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 200 60">
+                <ellipse cx="100" cy="30" rx="95" ry="25" fill="none" stroke="black" strokeWidth="2"/>
+              </svg>
+            </div>
+            <div className="space-y-4">
               {strengths.map((strength, index) => (
-                <div key={index} className="strength-item flex items-center space-x-4 opacity-0">
-                  <div className="w-3 h-3 bg-black rounded-full flex-shrink-0"></div>
-                  <span className="text-xl font-medium">{strength}</span>
-                  <div className="flex-1 h-px bg-gray-200"></div>
+                <div key={index} className="strength-item flex items-center space-x-3 opacity-0">
+                  <svg width="16" height="16" viewBox="0 0 16 16" className="text-black flex-shrink-0">
+                    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" fill="currentColor"/>
+                  </svg>
+                  <span 
+                    className="text-lg"
+                    style={{ fontFamily: 'Yoon350, sans-serif' }}
+                  >
+                    {strength}
+                  </span>
                 </div>
               ))}
             </div>
           </div>
+        </div>
+
+        {/* Read more button */}
+        <div className="mt-16 text-center">
+          <button className="bg-black text-white px-8 py-3 rounded-full hover:bg-gray-800 transition-colors duration-300 font-medium">
+            Read more
+          </button>
         </div>
 
         {/* Bottom decoration */}
@@ -199,6 +237,24 @@ const SkillsSection = () => {
           </div>
         </div>
       </div>
+
+      <style>{`
+        @font-face {
+          font-family: 'Times New Roman MT Condensed';
+          src: url('/fonts/Times New Roman MT Condensed Regular.otf') format('opentype');
+          font-weight: normal;
+          font-style: normal;
+          font-display: swap;
+        }
+        
+        @font-face {
+          font-family: 'Yoon350';
+          src: url('/fonts/yoon350.ttf') format('truetype');
+          font-weight: normal;
+          font-style: normal;
+          font-display: swap;
+        }
+      `}</style>
     </section>
   );
 };
