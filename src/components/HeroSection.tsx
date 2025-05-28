@@ -49,6 +49,52 @@ const HeroSection = () => {
         y: 100
       });
 
+      // ScrollTrigger for intro text animation
+      if (introWords) {
+        ScrollTrigger.create({
+          trigger: introTextRef.current,
+          start: "top 80%",
+          end: "bottom 20%",
+          toggleActions: "play reverse play reverse",
+          onEnter: () => {
+            gsap.to(introWords, {
+              opacity: 1,
+              x: 0,
+              duration: 0.6,
+              ease: "power2.out",
+              stagger: 0.15
+            });
+          },
+          onLeave: () => {
+            gsap.to(introWords, {
+              opacity: 0,
+              x: -50,
+              duration: 0.4,
+              ease: "power2.in",
+              stagger: 0.1
+            });
+          },
+          onEnterBack: () => {
+            gsap.to(introWords, {
+              opacity: 1,
+              x: 0,
+              duration: 0.6,
+              ease: "power2.out",
+              stagger: 0.15
+            });
+          },
+          onLeaveBack: () => {
+            gsap.to(introWords, {
+              opacity: 0,
+              x: -50,
+              duration: 0.4,
+              ease: "power2.in",
+              stagger: 0.1
+            });
+          }
+        });
+      }
+
       // Create timeline for entrance animations
       const tl = gsap.timeline({ delay: 0.5 });
 

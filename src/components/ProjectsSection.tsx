@@ -52,41 +52,50 @@ const ProjectsSection = () => {
       <div 
         ref={contentRef}
         className="relative z-10 h-screen flex flex-col items-center justify-center px-8"
+        style={{ transform: 'translateY(-200px)' }}
       >
         {/* My Projects Text */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-4 relative">
           <h2 
-            className="text-8xl md:text-[12rem] lg:text-[16rem] xl:text-[20rem] font-bold leading-tight"
-            style={{ fontFamily: 'Times New Roman MT Condensed, Times, serif' }}
+            className="text-6xl md:text-8xl lg:text-9xl font-bold leading-tight mb-4"
+            style={{ fontFamily: 'Yoon350, Times New Roman MT Condensed, Times, serif' }}
           >
             My
           </h2>
           <h2 
-            className="text-8xl md:text-[12rem] lg:text-[16rem] xl:text-[20rem] font-bold leading-tight"
-            style={{ fontFamily: 'Times New Roman MT Condensed, Times, serif' }}
+            className="text-6xl md:text-8xl lg:text-9xl font-bold leading-tight"
+            style={{ fontFamily: 'Yoon350, Times New Roman MT Condensed, Times, serif' }}
           >
             Projects
           </h2>
-        </div>
-        
-        {/* Project Character */}
-        <div className="mt-12">
-          <img 
-            src="/project.png"
-            alt="Project Character" 
-            className="w-80 h-80 md:w-96 md:h-96 lg:w-[500px] lg:h-[500px] object-contain drop-shadow-lg"
-            loading="eager"
-            decoding="async"
-            onError={(e) => {
-              console.error('Project image failed to load:', e);
-              console.error('Attempted path:', e.currentTarget.src);
-            }}
-            onLoad={() => console.log('project.png loaded successfully')}
-          />
+          
+          {/* Project Character - positioned to overlap with text */}
+          <div className="absolute bottom-[-15.125rem] left-1/2 transform -translate-x-1/2">
+            <img 
+              src="/project.png"
+              alt="Project Character" 
+              className="w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 object-contain drop-shadow-lg"
+              loading="eager"
+              decoding="async"
+              onError={(e) => {
+                console.error('Project image failed to load:', e);
+                console.error('Attempted path:', e.currentTarget.src);
+              }}
+              onLoad={() => console.log('project.png loaded successfully')}
+            />
+          </div>
         </div>
       </div>
 
       <style>{`
+        @font-face {
+          font-family: 'Yoon350';
+          src: url('/fonts/yoon350.ttf') format('truetype');
+          font-weight: normal;
+          font-style: normal;
+          font-display: swap;
+        }
+        
         @font-face {
           font-family: 'Times New Roman MT Condensed';
           src: url('/fonts/Times New Roman MT Condensed Regular.otf') format('opentype');
